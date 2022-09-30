@@ -11,7 +11,6 @@ steps:
       dockerfile: ./backend/Dockerfile
       repo: git.silkky.dev/ellie/piped-backend
       tags: latest
-      cache_from: git.silkky.dev/ellie/piped-backend:latest
       registry: git.silkky.dev
       username:
         from_secret: docker_username
