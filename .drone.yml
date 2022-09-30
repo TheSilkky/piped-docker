@@ -1,10 +1,10 @@
 ---
 kind: pipeline
 type: docker
-name: Backend
+name: backend
 
 steps:
-  - name: Docker Build & Push
+  - name: build & push
     image: plugins/docker
     settings:
       context: ./backend
