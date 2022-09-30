@@ -4,9 +4,11 @@ type: docker
 name: backend
 
 steps:
+
   - name: build & push
     image: plugins/docker
     settings:
+      debug: true
       context: ./backend
       dockerfile: ./backend/Dockerfile
       repo: git.silkky.dev/ellie/piped-backend
