@@ -9,6 +9,7 @@ steps:
     image: thegeeklab/drone-docker-buildx
     privileged: true
     settings:
+      debug: true
       context: ./backend
       dockerfile: ./backend/Dockerfile
       repo: git.silkky.dev/ellie/piped-backend
