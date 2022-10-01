@@ -9,6 +9,7 @@ steps:
     settings:
       context: ./backend
       dockerfile: ./backend/Dockerfile
+      cache_from: git.silkky.dev/ellie/piped-backend:latest
       repo: git.silkky.dev/ellie/piped-backend
       tags: latest
       registry: git.silkky.dev
@@ -32,6 +33,7 @@ steps:
     settings:
       context: ./proxy
       dockerfile: ./proxy/Dockerfile
+      cache_from: git.silkky.dev/ellie/piped-proxy:latest
       repo: git.silkky.dev/ellie/piped-proxy
       tags: latest
       registry: git.silkky.dev
@@ -55,6 +57,7 @@ steps:
     settings:
       context: ./frontend
       dockerfile: ./frontend/Dockerfile
+      cache_from: git.silkky.dev/ellie/piped-frontend:latest
       repo: git.silkky.dev/ellie/piped-frontend
       tags: latest
       registry: git.silkky.dev
