@@ -17,7 +17,7 @@ RUN git clone https://github.com/TeamPiped/http3-ytproxy.git /piped-proxy
 
 WORKDIR /piped-proxy
 
-RUN go build -ldflag "-s -w" main.go
+RUN go build -ldflags "-s -w" main.go
 
 ####################################################################################################
 ### Final image
