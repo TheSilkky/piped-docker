@@ -4,7 +4,6 @@ type: docker
 name: backend
 
 steps:
-
   - name: build & push
     image: plugins/docker
     settings:
@@ -28,7 +27,6 @@ type: docker
 name: proxy
 
 steps:
-
   - name: build & push
     image: plugins/docker
     settings:
@@ -52,7 +50,6 @@ type: docker
 name: frontend
 
 steps:
-
   - name: build & push
     image: plugins/docker
     settings:
