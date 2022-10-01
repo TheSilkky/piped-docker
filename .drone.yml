@@ -45,3 +45,27 @@ steps:
 trigger:
   branch:
     - main
+
+---
+kind: pipeline
+type: docker
+name: frontend
+
+steps:
+
+  - name: build & push
+    image: plugins/docker
+    settings:
+      context: ./frontend
+      dockerfile: ./frontend/Dockerfile
+      repo: git.silkky.dev/ellie/piped-frontend
+      tags: latest
+      registry: git.silkky.dev
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_token
+
+trigger:
+  branch:
+    - main
