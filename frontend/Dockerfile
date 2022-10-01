@@ -25,7 +25,7 @@ RUN yarn install --prefer-offline \
 FROM caddy:${CADDY_VERSION}-alpine
 
 COPY ./Caddyfile /etc/caddy/Caddyfile
-COPY --from=builder /app/dist /srv
+COPY --from=builder /piped-frontend/dist /srv
 
 LABEL org.opencontainers.image.title="Piped Frontend" \
       org.opencontainers.image.description="An alternative privacy-friendly YouTube frontend which is efficient by design. " \
