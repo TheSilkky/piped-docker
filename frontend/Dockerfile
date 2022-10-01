@@ -25,8 +25,10 @@ RUN yarn install --prefer-offline \
 FROM caddy:${CADDY_VERSION}-alpine
 
 COPY ./Caddyfile /etc/caddy/Caddyfile
-COPY ./startup.sh /startup.sh
 COPY --from=builder /piped-frontend/dist /srv
+
+COPY ./startup.sh /startup.sh
+RUN chmod +x /startup.sh
 
 CMD ["/startup.sh"]
 
