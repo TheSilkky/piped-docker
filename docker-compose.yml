@@ -1,1 +1,86 @@
 version: "3.8"
+
+networks:
+  web:
+    external: true
+  backend:
+    driver: bridge
+    internal: true
+
+volumes:
+  database:
+    driver: local
+
+services:
+
+  postgresql:
+    image: postgres:15rc1-alpine
+    restart: always
+    hostname: postgresql
+    networks:
+      - backend
+    volumes:
+      - database:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - POSTGRES_DB=piped
+      - POSTGRES_USER=piped
+      - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}
+
+  backend:
+    image: git.silkky.dev/ellie/piped-backend:latest
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.piped-backend.rule=Host(`${PIPED_BACKEND_HOST}`)
+      - traefik.http.routers.piped-backend.entryPoints=websecure
+      - traefik.http.routers.piped-backend.tls.certResolver=le
+      - traefik.http.routers.piped-backend.service=backend-piped
+      - traefik.http.services.backend-piped.loadbalancer.server.port=8080
+    hostname: piped-backend
+    networks:
+      - web
+      - backend
+    environment:
+      - PORT=8080
+      - HTTP_WORKERS=2
+      - PROXY_PART=https://${PIPED_PROXY_HOST}
+      - API_URL=https://${PIPED_BACKEND_HOST}
+      - FRONTEND_URL=https://${PIPED_FRONTEND_HOST}
+      - COMPROMISED_PASSWORD_CHECK=true
+      - DISABLE_REGISTRATION=${REGISTRATION_ENABLED}
+      - DISABLE_RYD=true
+      - DISABLE_LBRY=true
+      - hibernate.connection.url=jdbc:postgresql://postgresql:5432/piped
+      - hibernate.connection.driver_class=org.postgresql.Driver
+      - hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+      - hibernate.connection.username=piped
+      - hibernate.connection.password=${POSTGRESQL_PASSWORD}
+
+  proxy:
+    image: git.silkky.dev/ellie/piped-proxy:latest
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.piped-proxy.rule=Host(`${PIPED_PROXY_HOST}`)
+      - traefik.http.routers.piped-proxy.entryPoints=websecure
+      - traefik.http.routers.piped-proxy.tls.certResolver=le
+      - traefik.http.routers.piped-proxy.service=proxy-piped
+      - traefik.http.services.proxy-piped.loadbalancer.server.port=8080
+    hostname: piped-proxy
+    networks:
+      - web
+
+  frontend:
+    image: git.silkky.dev/ellie/piped-frontend:latest
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.piped-frontend.rule=Host(`${PIPED_FRONTEND_HOST}`)
+      - traefik.http.routers.piped-frontend.entryPoints=websecure
+      - traefik.http.routers.piped-frontend.tls.certResolver=le
+      - traefik.http.routers.piped-frontend.service=frontend-piped
+      - traefik.http.services.frontend-piped.loadbalancer.server.port=3000
+    hostname: piped-frontend
+    networks:
+      - web
