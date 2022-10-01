@@ -83,3 +83,5 @@ services:
     hostname: piped-frontend
     networks:
       - web
+    environment:
+      - API_URL=https://${PIPED_BACKEND_HOST}
