@@ -84,4 +84,4 @@ services:
     networks:
       - web
     environment:
-      - API_URL=https://${PIPED_BACKEND_HOST}
+      - API_URL=${PIPED_BACKEND_HOST}
