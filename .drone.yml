@@ -10,7 +10,33 @@ steps:
     settings:
       context: ./backend
       dockerfile: ./backend/Dockerfile
+      cache_from: git.silkky.dev/ellie/piped-backend:latest
       repo: git.silkky.dev/ellie/piped-backend
+      tags: latest
+      registry: git.silkky.dev
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_token
+
+trigger:
+  branch:
+    - main
+
+---
+kind: pipeline
+type: docker
+name: proxy
+
+steps:
+
+  - name: build & push
+    image: plugins/docker
+    settings:
+      context: ./proxy
+      dockerfile: ./proxy/Dockerfile
+      cache_from: git.silkky.dev/ellie/piped-proxy:latest
+      repo: git.silkky.dev/ellie/piped-proxy
       tags: latest
       registry: git.silkky.dev
       username:
