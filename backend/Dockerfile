@@ -10,9 +10,9 @@ RUN apk add --no-cache \
     git
 
 ADD https://api.github.com/repos/TeamPiped/Piped-Backend/git/refs/head /cachebreak
-RUN git clone https://github.com/TeamPiped/Piped-Backend.git /piped
+RUN git clone https://github.com/TeamPiped/Piped-Backend.git /piped-backend
 
-WORKDIR /piped
+WORKDIR /piped-backend
 
 RUN echo $(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short HEAD) > VERSION \
     && ./gradlew shadowJar
@@ -26,21 +26,21 @@ RUN apk add --no-cache \
     ca-certificates \
     tini
 
-WORKDIR /piped
+WORKDIR /piped-backend
 
-COPY --from=builder /piped/build/libs/piped-1.0-all.jar /piped/piped.jar
-COPY --from=builder /piped/VERSION /piped/VERSION
+COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar /piped-backend/piped.jar
+COPY --from=builder /piped-backend/VERSION /piped-backend/VERSION
 
-RUN touch /piped/config.properties
+RUN touch /piped-backend/config.properties
 
 RUN adduser --disabled-password --gecos "" --no-create-home piped \
-    && chown -R piped:piped /piped
+    && chown -R piped:piped /piped-backend
 
 USER piped
 
 ENTRYPOINT ["/sbin/tini", "--"]
 
-CMD ["java", "-jar", "/piped/piped.jar"]
+CMD ["java", "-jar", "/piped-backend/piped.jar"]
 
 EXPOSE 8080
 
