@@ -9,8 +9,8 @@ RUN apk add --no-cache \
     ca-certificates \
     git
 
-ADD https://api.github.com/repos/TeamPiped/Piped-Backend/git/refs/head /cachebreak
-RUN git clone https://github.com/TeamPiped/Piped-Backend.git /piped-backend
+ADD https://git.silkky.dev/api/v1/repos/ellie/Piped-Backend/git/refs/head /cachebreak
+RUN git clone https://git.silkky.dev/ellie/Piped-Backend.git /piped-backend
 
 WORKDIR /piped-backend
 
