@@ -40,6 +40,9 @@ steps:
       password:
         from_secret: docker_token
 
+depends_on:
+  - backend
+
 trigger:
   branch:
     - main
@@ -62,6 +65,10 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_token
+
+depends_on:
+  - backend
+  - proxy
 
 trigger:
   branch:
