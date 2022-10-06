@@ -50,7 +50,7 @@ services:
       - PROXY_PART=https://${PIPED_PROXY_HOST}
       - API_URL=https://${PIPED_BACKEND_HOST}
       - FRONTEND_URL=https://${PIPED_FRONTEND_HOST}
-      - PUBSUB_URL=${PIPED_PUBSUB_HOST}
+      - PUBSUB_URL=https://${PIPED_PUBSUB_HOST}
       - COMPROMISED_PASSWORD_CHECK=true
       - DISABLE_REGISTRATION=${DISABLE_REGISTRATION}
       - DISABLE_RYD=true
@@ -89,4 +89,4 @@ services:
     networks:
       - web
     environment:
-      - API_URL=${PIPED_BACKEND_HOST}
+      - API_HOST=${PIPED_BACKEND_HOST}
