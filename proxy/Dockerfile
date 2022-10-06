@@ -12,8 +12,8 @@ RUN apk add --no-cache \
     build-base \
     libwebp-dev
 
-ADD https://api.github.com/repos/TeamPiped/http3-ytproxy/git/refs/head /cachebreak
-RUN git clone https://github.com/TeamPiped/http3-ytproxy.git /piped-proxy
+ADD https://git.silkky.dev/api/v1/repos/github/http3-ytproxy/git/refs/head /cachebreak
+RUN git clone https://git.silkky.dev/github/http3-ytproxy.git /piped-proxy
 
 WORKDIR /piped-proxy
 
