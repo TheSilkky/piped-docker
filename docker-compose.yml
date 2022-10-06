@@ -35,6 +35,10 @@ services:
       - traefik.http.routers.piped-backend.entryPoints=websecure
       - traefik.http.routers.piped-backend.tls.certResolver=le
       - traefik.http.routers.piped-backend.service=backend-piped
+      - traefik.http.routers.piped-backend-pubsub.rule=Host(`${PIPED_PUBSUB_BACKEND_HOST}`) && Path(`/webhooks/pubsub`)
+      - traefik.http.routers.piped-backend-pubsub.entryPoints=websecure
+      - traefik.http.routers.piped-backend-pubsub.tls.certResolver=le
+      - traefik.http.routers.piped-backend-pubsub.service=backend-piped
       - traefik.http.services.backend-piped.loadbalancer.server.port=8080
     hostname: piped-backend
     networks:
