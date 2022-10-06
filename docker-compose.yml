@@ -35,10 +35,10 @@ services:
       - traefik.http.routers.piped-backend.entryPoints=websecure
       - traefik.http.routers.piped-backend.tls.certResolver=le
       - traefik.http.routers.piped-backend.service=backend-piped
-      - traefik.http.routers.piped-backend-pubsub.rule=Host(`${PIPED_PUBSUB_BACKEND_HOST}`) && Path(`/webhooks/pubsub`)
-      - traefik.http.routers.piped-backend-pubsub.entryPoints=websecure
-      - traefik.http.routers.piped-backend-pubsub.tls.certResolver=le
-      - traefik.http.routers.piped-backend-pubsub.service=backend-piped
+      - traefik.http.routers.piped-pubsub.rule=Host(`${PIPED_PUBSUB_HOST}`) && Path(`/webhooks/pubsub`)
+      - traefik.http.routers.piped-pubsub.entryPoints=websecure
+      - traefik.http.routers.piped-pubsub.tls.certResolver=le
+      - traefik.http.routers.piped-pubsub.service=backend-piped
       - traefik.http.services.backend-piped.loadbalancer.server.port=8080
     hostname: piped-backend
     networks:
@@ -50,7 +50,7 @@ services:
       - PROXY_PART=https://${PIPED_PROXY_HOST}
       - API_URL=https://${PIPED_BACKEND_HOST}
       - FRONTEND_URL=https://${PIPED_FRONTEND_HOST}
-      - PUBSUB_HUB_URL=${PUBSUB_HUB_URL}
+      - PUBSUB_URL=${PIPED_PUBSUB_HOST}
       - COMPROMISED_PASSWORD_CHECK=true
       - DISABLE_REGISTRATION=${DISABLE_REGISTRATION}
       - DISABLE_RYD=true
