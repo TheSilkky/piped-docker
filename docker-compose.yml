@@ -4,7 +4,7 @@ networks:
   web:
     external: true
   backend:
-    driver: bridge
+    driver: overlay
 
 volumes:
   database:
@@ -14,7 +14,6 @@ services:
 
   postgresql:
     image: postgres:14.5-alpine
-    restart: always
     hostname: postgresql
     networks:
       - backend
@@ -25,21 +24,14 @@ services:
       - POSTGRES_DB=piped
       - POSTGRES_USER=piped
       - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
 
   backend:
     image: git.silkky.dev/ellie/piped-backend:latest
-    restart: always
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.piped-backend.rule=Host(`${PIPED_BACKEND_HOST}`)
-      - traefik.http.routers.piped-backend.entryPoints=websecure
-      - traefik.http.routers.piped-backend.tls.certResolver=le
-      - traefik.http.routers.piped-backend.service=backend-piped
-      - traefik.http.routers.piped-pubsub.rule=Host(`${PIPED_PUBSUB_HOST}`) && Path(`/webhooks/pubsub`)
-      - traefik.http.routers.piped-pubsub.entryPoints=websecure
-      - traefik.http.routers.piped-pubsub.tls.certResolver=le
-      - traefik.http.routers.piped-pubsub.service=backend-piped
-      - traefik.http.services.backend-piped.loadbalancer.server.port=8080
     hostname: piped-backend
     networks:
       - web
@@ -60,33 +52,57 @@ services:
       - hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
       - hibernate.connection.username=piped
       - hibernate.connection.password=${POSTGRESQL_PASSWORD}
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.piped-backend.rule=Host(`${PIPED_BACKEND_HOST}`)
+        - traefik.http.routers.piped-backend.entryPoints=websecure
+        - traefik.http.routers.piped-backend.tls.certResolver=le
+        - traefik.http.routers.piped-backend.service=backend-piped
+        - traefik.http.routers.piped-pubsub.rule=Host(`${PIPED_PUBSUB_HOST}`) && Path(`/webhooks/pubsub`)
+        - traefik.http.routers.piped-pubsub.entryPoints=websecure
+        - traefik.http.routers.piped-pubsub.tls.certResolver=le
+        - traefik.http.routers.piped-pubsub.service=backend-piped
+        - traefik.http.services.backend-piped.loadbalancer.server.port=8080
 
   proxy:
     image: git.silkky.dev/ellie/piped-proxy:latest
-    restart: always
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.piped-proxy.rule=Host(`${PIPED_PROXY_HOST}`)
-      - traefik.http.routers.piped-proxy.entryPoints=websecure
-      - traefik.http.routers.piped-proxy.tls.certResolver=le
-      - traefik.http.routers.piped-proxy.service=proxy-piped
-      - traefik.http.services.proxy-piped.loadbalancer.server.port=8080
     hostname: piped-proxy
     networks:
       - web
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.piped-proxy.rule=Host(`${PIPED_PROXY_HOST}`)
+        - traefik.http.routers.piped-proxy.entryPoints=websecure
+        - traefik.http.routers.piped-proxy.tls.certResolver=le
+        - traefik.http.routers.piped-proxy.service=proxy-piped
+        - traefik.http.services.proxy-piped.loadbalancer.server.port=8080
 
   frontend:
     image: git.silkky.dev/ellie/piped-frontend:latest
-    restart: always
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.piped-frontend.rule=Host(`${PIPED_FRONTEND_HOST}`)
-      - traefik.http.routers.piped-frontend.entryPoints=websecure
-      - traefik.http.routers.piped-frontend.tls.certResolver=le
-      - traefik.http.routers.piped-frontend.service=frontend-piped
-      - traefik.http.services.frontend-piped.loadbalancer.server.port=3000
     hostname: piped-frontend
     networks:
       - web
     environment:
       - API_HOST=${PIPED_BACKEND_HOST}
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.piped-frontend.rule=Host(`${PIPED_FRONTEND_HOST}`)
+        - traefik.http.routers.piped-frontend.entryPoints=websecure
+        - traefik.http.routers.piped-frontend.tls.certResolver=le
+        - traefik.http.routers.piped-frontend.service=frontend-piped
+        - traefik.http.services.frontend-piped.loadbalancer.server.port=3000
