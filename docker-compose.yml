@@ -38,7 +38,7 @@ services:
       - backend
     environment:
       - PORT=8080
-      - HTTP_WORKERS=2
+      - HTTP_WORKERS=4
       - PROXY_PART=https://${PIPED_PROXY_HOST}
       - API_URL=https://${PIPED_BACKEND_HOST}
       - FRONTEND_URL=https://${PIPED_FRONTEND_HOST}
@@ -54,7 +54,7 @@ services:
       - hibernate.connection.password=${POSTGRESQL_PASSWORD}
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 4
       restart_policy:
         condition: any
       labels:
@@ -67,7 +67,10 @@ services:
         - traefik.http.routers.piped-pubsub.entryPoints=websecure
         - traefik.http.routers.piped-pubsub.tls.certResolver=le
         - traefik.http.routers.piped-pubsub.service=backend-piped
-        - traefik.http.services.backend-piped.loadbalancer.server.port=8080
+        - traefik.http.services.backend-piped.loadBalancer.server.port=8080
+        - traefik.http.services.backend-piped.loadBalancer.sticky.cookie.secure=true
+        - traefik.http.services.backend-piped.loadBalancer.sticky.cookie.httpOnly=true
+        - traefik.http.services.backend-piped.loadBalancer.sticky.cookie.sameSite=strict
 
   proxy:
     image: git.silkky.dev/ellie/piped-proxy:latest
@@ -76,7 +79,7 @@ services:
       - web
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 4
       restart_policy:
         condition: any
       labels:
@@ -85,7 +88,10 @@ services:
         - traefik.http.routers.piped-proxy.entryPoints=websecure
         - traefik.http.routers.piped-proxy.tls.certResolver=le
         - traefik.http.routers.piped-proxy.service=proxy-piped
-        - traefik.http.services.proxy-piped.loadbalancer.server.port=8080
+        - traefik.http.services.proxy-piped.loadBalancer.server.port=8080
+        - traefik.http.services.proxy-piped.loadBalancer.sticky.cookie.secure=true
+        - traefik.http.services.proxy-piped.loadBalancer.sticky.cookie.httpOnly=true
+        - traefik.http.services.proxy-piped.loadBalancer.sticky.cookie.sameSite=strict
 
   frontend:
     image: git.silkky.dev/ellie/piped-frontend:latest
@@ -96,7 +102,7 @@ services:
       - API_HOST=${PIPED_BACKEND_HOST}
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: any
       labels:
@@ -105,4 +111,4 @@ services:
         - traefik.http.routers.piped-frontend.entryPoints=websecure
         - traefik.http.routers.piped-frontend.tls.certResolver=le
         - traefik.http.routers.piped-frontend.service=frontend-piped
-        - traefik.http.services.frontend-piped.loadbalancer.server.port=3000
+        - traefik.http.services.frontend-piped.loadBalancer.server.port=3000
