@@ -89,9 +89,6 @@ services:
         - traefik.http.routers.piped-proxy.tls.certResolver=le
         - traefik.http.routers.piped-proxy.service=proxy-piped
         - traefik.http.services.proxy-piped.loadBalancer.server.port=8080
-        - traefik.http.services.proxy-piped.loadBalancer.sticky.cookie.secure=true
-        - traefik.http.services.proxy-piped.loadBalancer.sticky.cookie.httpOnly=true
-        - traefik.http.services.proxy-piped.loadBalancer.sticky.cookie.sameSite=strict
 
   frontend:
     image: git.silkky.dev/ellie/piped-frontend:latest
