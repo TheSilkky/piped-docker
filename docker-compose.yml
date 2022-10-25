@@ -11,7 +11,6 @@ volumes:
     driver: local
 
 services:
-
   postgresql:
     image: postgres:14.5-alpine
     hostname: postgresql
@@ -29,7 +28,6 @@ services:
       replicas: 1
       restart_policy:
         condition: any
-
   backend:
     image: git.silkky.dev/ellie/piped-backend:latest
     hostname: piped-backend
@@ -57,6 +55,8 @@ services:
       replicas: 4
       restart_policy:
         condition: any
+      update_config:
+        parallelism: 2
       labels:
         - traefik.enable=true
         - traefik.http.routers.piped-backend.rule=Host(`${PIPED_BACKEND_HOST}`)
@@ -71,7 +71,6 @@ services:
         - traefik.http.services.backend-piped.loadBalancer.sticky.cookie.secure=true
         - traefik.http.services.backend-piped.loadBalancer.sticky.cookie.httpOnly=true
         - traefik.http.services.backend-piped.loadBalancer.sticky.cookie.sameSite=strict
-
   proxy:
     image: git.silkky.dev/ellie/piped-proxy:latest
     hostname: piped-proxy
@@ -82,6 +81,8 @@ services:
       replicas: 4
       restart_policy:
         condition: any
+      update_config:
+        parallelism: 2
       labels:
         - traefik.enable=true
         - traefik.http.routers.piped-proxy.rule=Host(`${PIPED_PROXY_HOST}`)
@@ -89,7 +90,6 @@ services:
         - traefik.http.routers.piped-proxy.tls.certResolver=le
         - traefik.http.routers.piped-proxy.service=proxy-piped
         - traefik.http.services.proxy-piped.loadBalancer.server.port=8080
-
   frontend:
     image: git.silkky.dev/ellie/piped-frontend:latest
     hostname: piped-frontend
