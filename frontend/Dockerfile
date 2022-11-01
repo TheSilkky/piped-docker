@@ -1,6 +1,6 @@
 ARG NODE_VERSION=lts
 ARG ALPINE_VERSION=3.16
-ARG CADDY_VERSION=2.6.1
+ARG CADDY_VERSION=2.6.2
 
 ####################################################################################################
 ## Builder
