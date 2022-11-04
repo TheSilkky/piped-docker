@@ -44,7 +44,7 @@ EXPOSE 8080
 
 STOPSIGNAL SIGTERM
 
-LABEL org.opencontainers.image.title="Piped Proxy" \
-      org.opencontainers.image.description="An alternative privacy-friendly YouTube frontend which is efficient by design. " \
-      org.opencontainers.image.licenses="AGPL-3.0-or-later" \
-      org.opencontainers.image.source="https://git.silkky.dev/ellie/piped-docker.git"
+LABEL org.opencontainers.image.title="Piped Proxy"
+LABEL org.opencontainers.image.description="An alternative privacy-friendly YouTube frontend which is efficient by design."
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
+LABEL org.opencontainers.image.source="https://git.silkky.dev/ellie/piped-docker.git"

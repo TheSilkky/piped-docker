@@ -31,7 +31,7 @@ COPY --from=builder /piped-frontend/dist /srv
 RUN chmod +x /startup.sh
 CMD ["/startup.sh"]
 
-LABEL org.opencontainers.image.title="Piped Frontend" \
-      org.opencontainers.image.description="An alternative privacy-friendly YouTube frontend which is efficient by design. " \
-      org.opencontainers.image.licenses="AGPL-3.0-or-later" \
-      org.opencontainers.image.source="https://git.silkky.dev/ellie/piped-docker.git"
+LABEL org.opencontainers.image.title="Piped Frontend"
+LABEL org.opencontainers.image.description="An alternative privacy-friendly YouTube frontend which is efficient by design."
+LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
+LABEL org.opencontainers.image.source="https://git.silkky.dev/ellie/piped-docker.git"
