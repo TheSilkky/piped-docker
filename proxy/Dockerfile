@@ -1,23 +1,21 @@
-ARG GO_VERSION=1.18.6
+ARG RUST_VERSION=1.65.0
 ARG ALPINE_VERSION=3.16
 
 ####################################################################################################
 ## Builder
 ####################################################################################################
-FROM golang:${GO_VERSION}-alpine${ALPINE_VERSION} AS builder
+FROM rust:${RUST_VERSION}-alpine${ALPINE_VERSION} AS builder
 
 RUN apk add --no-cache \
     ca-certificates \
-    git \
-    build-base \
-    libwebp-dev
+    git
 
-ADD https://git.silkky.dev/api/v1/repos/github/http3-ytproxy/git/refs/head /cachebreak
-RUN git clone https://git.silkky.dev/github/http3-ytproxy.git /piped-proxy
+ADD https://git.silkky.dev/api/v1/repos/github/piped-proxy/git/refs/head /cachebreak
+RUN git clone https://git.silkky.dev/github/piped-proxy.git /piped-proxy
 
 WORKDIR /piped-proxy
 
-RUN go build -ldflags "-s -w" main.go
+RUN cargo build --release
 
 ####################################################################################################
 ### Final image
@@ -26,12 +24,11 @@ FROM alpine:${ALPINE_VERSION}
 
 RUN apk add --no-cache \
     ca-certificates \
-    tini \
-    libwebp
+    tini
 
 WORKDIR /piped-proxy
 
-COPY --from=builder /piped-proxy/main /piped-proxy/http3-ytproxy
+COPY --from=builder /piped-proxy/target/release/piped-proxy /piped-proxy/piped-proxy
 
 RUN adduser --disabled-password --gecos "" --no-create-home piped \
     && chown -R piped:piped /piped-proxy
@@ -40,7 +37,7 @@ USER piped
 
 ENTRYPOINT ["/sbin/tini", "--"]
 
-CMD ["/piped-proxy/http3-ytproxy"]
+CMD ["/piped-proxy/piped-proxy"]
 
 EXPOSE 8080
 
