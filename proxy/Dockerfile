@@ -8,6 +8,7 @@ FROM rust:${RUST_VERSION}-alpine${ALPINE_VERSION} AS builder
 
 RUN apk add --no-cache \
     ca-certificates \
+    build-base \
     git
 
 ADD https://git.silkky.dev/api/v1/repos/github/piped-proxy/git/refs/head /cachebreak
