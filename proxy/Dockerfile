@@ -16,7 +16,10 @@ RUN git clone https://git.silkky.dev/github/piped-proxy.git /piped-proxy
 
 WORKDIR /piped-proxy
 
-RUN cargo build --release
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/piped-proxy/target/ \
+    cargo build --release \
+    && mv target/release/piped-proxy .
 
 ####################################################################################################
 ### Final image
@@ -29,7 +32,7 @@ RUN apk add --no-cache \
 
 WORKDIR /piped-proxy
 
-COPY --from=builder /piped-proxy/target/release/piped-proxy /piped-proxy/piped-proxy
+COPY --from=builder /piped-proxy/piped-proxy /piped-proxy/piped-proxy
 
 RUN adduser --disabled-password --gecos "" --no-create-home piped \
     && chown -R piped:piped /piped-proxy

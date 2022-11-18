@@ -16,7 +16,9 @@ RUN git clone https://git.silkky.dev/github/Piped.git /piped-frontend
 
 WORKDIR /piped-frontend
 
-RUN yarn install --prefer-offline \
+RUN --mount=type=cache,target=/root/.cache/yarn \
+    --mount=type=cache,target=/piped-frontend/node_modules \
+    yarn install --prefer-offline \
     && yarn build
 
 ####################################################################################################
