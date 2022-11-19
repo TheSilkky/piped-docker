@@ -5,7 +5,8 @@ name: backend
 
 steps:
   - name: build & push
-    image: plugins/docker
+    image: thegeeklab/drone-docker-buildx
+    privileged: true
     settings:
       context: ./backend
       dockerfile: ./backend/Dockerfile
@@ -28,7 +29,8 @@ name: proxy
 
 steps:
   - name: build & push
-    image: plugins/docker
+    image: thegeeklab/drone-docker-buildx
+    privileged: true
     settings:
       context: ./proxy
       dockerfile: ./proxy/Dockerfile
@@ -51,7 +53,8 @@ name: frontend
 
 steps:
   - name: build & push
-    image: plugins/docker
+    image: thegeeklab/drone-docker-buildx
+    privileged: true
     settings:
       context: ./frontend
       dockerfile: ./frontend/Dockerfile
