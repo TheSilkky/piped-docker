@@ -1,5 +1,5 @@
-ARG RUST_VERSION=1.65.0
-ARG ALPINE_VERSION=3.16
+ARG RUST_VERSION=1.66.1
+ARG ALPINE_VERSION=3.17
 
 ####################################################################################################
 ## Builder
