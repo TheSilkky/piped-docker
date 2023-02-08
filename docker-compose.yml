@@ -45,6 +45,7 @@ services:
       - DISABLE_REGISTRATION=${DISABLE_REGISTRATION}
       - DISABLE_RYD=true
       - DISABLE_LBRY=true
+      - SENTRY_DSN=""
       - hibernate.connection.url=jdbc:postgresql://postgresql:5432/piped
       - hibernate.connection.driver_class=org.postgresql.Driver
       - hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
