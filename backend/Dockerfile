@@ -9,8 +9,8 @@ RUN apk add --no-cache \
     ca-certificates \
     git
 
-ADD https://git.silkky.dev/api/v1/repos/ellie/Piped-Backend/git/refs/head /cachebreak
-RUN git clone https://git.silkky.dev/ellie/Piped-Backend.git /piped-backend
+ADD https://git.silkky.dev/api/v1/repos/github/Piped-Backend/git/refs/head /cachebreak
+RUN git clone https://git.silkky.dev/github/Piped-Backend.git /piped-backend
 
 WORKDIR /piped-backend
 
@@ -25,8 +25,7 @@ FROM eclipse-temurin:${JAVA_VERSION}-jre-alpine
 
 RUN apk add --no-cache \
     ca-certificates \
-    tini \
-    libgcc
+    tini
 
 WORKDIR /piped-backend
 
