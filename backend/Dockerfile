@@ -44,7 +44,8 @@ HEALTHCHECK \
     --start-period=15s \
     --interval=1m \
     --timeout=5s \
-    CMD wget --spider --q http://localhost:8080/healthcheck || exit 1
+    CMD wget --spider --quiet http://localhost:8080/healthcheck || exit 1
+    CMD wget --spider --quiet http://localhost:8080/healthcheck || exit 1
 
 LABEL org.opencontainers.image.title="Piped Backend"
 LABEL org.opencontainers.image.description="An alternative privacy-friendly YouTube frontend which is efficient by design."
