@@ -26,8 +26,7 @@ FROM eclipse-temurin:${JAVA_VERSION}-jre-alpine
 RUN apk add --no-cache \
     ca-certificates \
     tini \
-    libgcc \
-    libg++
+    libgcc
 
 WORKDIR /piped-backend
 
