@@ -5,7 +5,7 @@ ARG JAVA_VERSION=17
 ####################################################################################################
 FROM eclipse-temurin:${JAVA_VERSION}-jdk AS builder
 
-RUN apt install -y \
+RUN apt update && apt install -y \
     git
 
 ADD https://git.silkky.dev/api/v1/repos/github/Piped-Backend/git/refs/head /cachebreak
