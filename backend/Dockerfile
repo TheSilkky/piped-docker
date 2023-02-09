@@ -5,8 +5,6 @@ ARG JAVA_VERSION=17
 ####################################################################################################
 FROM eclipse-temurin:${JAVA_VERSION}-jdk AS builder
 
-ENV DEBIAN_FRONTEND=noninteractive
-
 RUN apt install -y \
     git
 
@@ -24,11 +22,6 @@ RUN --mount=type=cache,target=/root/.gradle/caches/ \
 ####################################################################################################
 FROM eclipse-temurin:${JAVA_VERSION}-jre
 
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt install -y \
-    tini
-
 WORKDIR /piped-backend
 
 COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar /piped-backend/piped.jar
@@ -40,8 +33,6 @@ RUN adduser --disabled-password --gecos "" --no-create-home piped \
     && chown -R piped:piped /piped-backend
 
 USER piped
-
-ENTRYPOINT ["/sbin/tini", "--"]
 
 CMD ["java", "-jar", "/piped-backend/piped.jar"]
 
