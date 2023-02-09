@@ -3,10 +3,11 @@ ARG JAVA_VERSION=17
 ####################################################################################################
 ## Builder
 ####################################################################################################
-FROM eclipse-temurin:${JAVA_VERSION}-jdk-alpine AS builder
+FROM eclipse-temurin:${JAVA_VERSION}-jdk AS builder
 
-RUN apk add --no-cache \
-    ca-certificates \
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt install -y \
     git
 
 ADD https://git.silkky.dev/api/v1/repos/github/Piped-Backend/git/refs/head /cachebreak
@@ -21,10 +22,11 @@ RUN --mount=type=cache,target=/root/.gradle/caches/ \
 ####################################################################################################
 ### Final image
 ####################################################################################################
-FROM eclipse-temurin:${JAVA_VERSION}-jre-alpine
+FROM eclipse-temurin:${JAVA_VERSION}-jre
 
-RUN apk add --no-cache \
-    ca-certificates \
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt install -y \
     tini
 
 WORKDIR /piped-backend
