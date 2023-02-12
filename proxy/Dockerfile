@@ -11,7 +11,6 @@ RUN apk add --no-cache \
     build-base \
     git
 
-ADD https://git.silkky.dev/api/v1/repos/github/piped-proxy/git/refs/head /cachebreak
 RUN git clone https://git.silkky.dev/github/piped-proxy.git /piped-proxy
 
 WORKDIR /piped-proxy

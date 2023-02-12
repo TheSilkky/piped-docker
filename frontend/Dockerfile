@@ -11,7 +11,6 @@ RUN apk add --no-cache \
     ca-certificates \
     git
 
-ADD https://git.silkky.dev/api/v1/repos/github/Piped/git/refs/head /cachebreak
 RUN git clone https://git.silkky.dev/github/Piped.git /piped-frontend
 
 WORKDIR /piped-frontend

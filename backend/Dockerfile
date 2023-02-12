@@ -8,7 +8,6 @@ FROM eclipse-temurin:${JAVA_VERSION}-jdk AS builder
 RUN apt update && apt install -y \
     git
 
-ADD https://git.silkky.dev/api/v1/repos/github/Piped-Backend/git/refs/head /cachebreak
 RUN git clone https://git.silkky.dev/github/Piped-Backend.git /piped-backend
 
 WORKDIR /piped-backend
