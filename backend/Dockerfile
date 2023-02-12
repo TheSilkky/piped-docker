@@ -1,16 +1,20 @@
 ARG JAVA_VERSION=17
+ARG PIPED_BACKEND_VERSION=e6f9bf884941b3a1bfe257ed3eb7f20fc1aa9dea
 
 ####################################################################################################
 ## Builder
 ####################################################################################################
 FROM eclipse-temurin:${JAVA_VERSION}-jdk AS builder
 
+ARG PIPED_BACKEND_VERSION
+
 RUN apt update && apt install -y \
     git
 
-RUN git clone https://git.silkky.dev/github/Piped-Backend.git /piped-backend
-
 WORKDIR /piped-backend
+
+RUN git clone https://git.silkky.dev/github/Piped-Backend.git /piped-backend \
+    && git checkout ${PIPED_BACKEND_VERSION}
 
 RUN ./gradlew shadowJar \
     && echo $(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short HEAD) > VERSION

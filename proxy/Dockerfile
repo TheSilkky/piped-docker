@@ -1,19 +1,23 @@
 ARG RUST_VERSION=1.67.1
 ARG ALPINE_VERSION=3.17
+ARG PIPED_PROXY_VERSION=97dd7d40759847a3d42eca59c4e2334f55896930
 
 ####################################################################################################
 ## Builder
 ####################################################################################################
 FROM rust:${RUST_VERSION}-alpine${ALPINE_VERSION} AS builder
 
+ARG PIPED_PROXY_VERSION
+
 RUN apk add --no-cache \
     ca-certificates \
     build-base \
     git
 
-RUN git clone https://git.silkky.dev/github/piped-proxy.git /piped-proxy
-
 WORKDIR /piped-proxy
+
+RUN git clone https://git.silkky.dev/github/piped-proxy.git /piped-proxy \
+    && git checkout ${PIPED_PROXY_VERSION}
 
 RUN cargo build --release \
     && mv target/release/piped-proxy .

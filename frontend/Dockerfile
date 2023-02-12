@@ -1,19 +1,23 @@
 ARG NODE_VERSION=lts
 ARG ALPINE_VERSION=3.17
 ARG CADDY_VERSION=2.6.3
+ARG PIPED_FRONTEND_VERSION=c2e114a8df2ba448d5328e6f7da9481603999b2d
 
 ####################################################################################################
 ## Builder
 ####################################################################################################
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS builder
 
+ARG PIPED_FRONTEND_VERSION
+
 RUN apk add --no-cache \
     ca-certificates \
     git
 
-RUN git clone https://git.silkky.dev/github/Piped.git /piped-frontend
-
 WORKDIR /piped-frontend
+
+RUN git clone https://git.silkky.dev/github/Piped.git /piped-frontend \
+    && git checkout ${PIPED_FRONTEND_VERSION}
 
 RUN yarn install --prefer-offline \
     && yarn build
