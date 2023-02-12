@@ -1,6 +1,6 @@
 ARG NODE_VERSION=lts
 ARG ALPINE_VERSION=3.17
-ARG CADDY_VERSION=2.6.2
+ARG CADDY_VERSION=2.6.3
 
 ####################################################################################################
 ## Builder
@@ -16,9 +16,7 @@ RUN git clone https://git.silkky.dev/github/Piped.git /piped-frontend
 
 WORKDIR /piped-frontend
 
-RUN --mount=type=cache,target=/root/.cache/yarn \
-    --mount=type=cache,target=/piped-frontend/node_modules \
-    yarn install --prefer-offline \
+RUN yarn install --prefer-offline \
     && yarn build
 
 ####################################################################################################

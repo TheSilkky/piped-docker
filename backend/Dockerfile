@@ -13,8 +13,7 @@ RUN git clone https://git.silkky.dev/github/Piped-Backend.git /piped-backend
 
 WORKDIR /piped-backend
 
-RUN --mount=type=cache,target=/root/.gradle/caches/ \
-    ./gradlew shadowJar \
+RUN ./gradlew shadowJar \
     && echo $(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short HEAD) > VERSION
 
 ####################################################################################################

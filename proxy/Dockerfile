@@ -16,9 +16,7 @@ RUN git clone https://git.silkky.dev/github/piped-proxy.git /piped-proxy
 
 WORKDIR /piped-proxy
 
-RUN --mount=type=cache,target=/usr/local/cargo/registry \
-    --mount=type=cache,target=/piped-proxy/target/ \
-    cargo build --release \
+RUN cargo build --release \
     && mv target/release/piped-proxy .
 
 ####################################################################################################
