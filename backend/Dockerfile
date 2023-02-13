@@ -13,8 +13,10 @@ RUN apt update && apt install -y \
 
 WORKDIR /piped-backend
 
-RUN git clone https://git.silkky.dev/github/Piped-Backend.git /piped-backend \
-    && git checkout ${PIPED_BACKEND_VERSION}
+RUN git init \
+    && git remote add origin https://git.silkky.dev/github/Piped-Backend.git \
+    && git fetch origin ${PIPED_BACKEND_VERSION} \
+    && git reset --hard FETCH_HEAD
 
 RUN ./gradlew shadowJar \
     && echo $(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short HEAD) > VERSION

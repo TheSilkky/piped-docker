@@ -16,8 +16,10 @@ RUN apk add --no-cache \
 
 WORKDIR /piped-proxy
 
-RUN git clone https://git.silkky.dev/github/piped-proxy.git /piped-proxy \
-    && git checkout ${PIPED_PROXY_VERSION}
+RUN git init \
+    && git remote add origin https://git.silkky.dev/github/piped-proxy.git \
+    && git fetch origin ${PIPED_PROXY_VERSION} \
+    && git reset --hard FETCH_HEAD
 
 RUN cargo build --release \
     && mv target/release/piped-proxy .

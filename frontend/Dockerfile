@@ -16,8 +16,10 @@ RUN apk add --no-cache \
 
 WORKDIR /piped-frontend
 
-RUN git clone https://git.silkky.dev/github/Piped.git /piped-frontend \
-    && git checkout ${PIPED_FRONTEND_VERSION}
+RUN git init \
+    && git remote add origin https://git.silkky.dev/github/Piped.git \
+    && git fetch origin ${PIPED_FRONTEND_VERSION} \
+    && git reset --hard FETCH_HEAD
 
 RUN yarn install --prefer-offline \
     && yarn build
