@@ -11,7 +11,7 @@ steps:
       context: ./backend
       dockerfile: ./backend/Dockerfile
       repo: git.silkky.dev/ellie/piped-backend
-      tags: latest,401f2ca38366bd6d2f55ba854538a9962f8e189f
+      tags: latest,6e5d8f207cde99363989d5a059339309ae0572d3
       registry: git.silkky.dev
       username:
         from_secret: docker_username
@@ -59,7 +59,7 @@ steps:
       context: ./frontend
       dockerfile: ./frontend/Dockerfile
       repo: git.silkky.dev/ellie/piped-frontend
-      tags: latest,7affa85efb26712268b06e1a53f765fbb3914ef4
+      tags: latest,fba9b80fcc9fda314855eb07894ced29e707a958
       registry: git.silkky.dev
       username:
         from_secret: docker_username
