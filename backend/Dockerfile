@@ -1,4 +1,4 @@
-ARG JAVA_VERSION=17
+ARG JAVA_VERSION=19
 ARG PIPED_BACKEND_VERSION=87aec4782e4a3e1d526269620f6a429db95fddd6
 
 ####################################################################################################
