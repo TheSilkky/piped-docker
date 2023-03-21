@@ -38,7 +38,7 @@ RUN adduser --disabled-password --gecos "" --no-create-home piped \
 
 USER piped
 
-CMD ["java", "-jar", "/piped-backend/piped.jar"]
+CMD ["java", "-server", "-Xmx1G", "-XX:+UnlockExperimentalVMOptions", "-XX:+OptimizeStringConcat", "-XX:+UseStringDeduplication", "-XX:+UseCompressedOops", "-XX:+UseNUMA", "-XX:+UseG1GC", "-Xshare:on", "--enable-preview", "-jar", "/piped-backend/piped.jar"]
 
 EXPOSE 8080
 
