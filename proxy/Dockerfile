@@ -1,6 +1,6 @@
 ARG RUST_VERSION=1.67.1
 ARG ALPINE_VERSION=3.17
-ARG PIPED_PROXY_VERSION=40d0cef1055eb2872f33102bb3d4815838d3eac0
+ARG PIPED_PROXY_VERSION=6b1a5e657c49e8d4a7b9093bd6e76cea809fb7a5
 
 ####################################################################################################
 ## Builder
