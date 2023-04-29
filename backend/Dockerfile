@@ -1,5 +1,5 @@
 ARG JAVA_VERSION=19
-ARG PIPED_BACKEND_VERSION=09f3e0e595cd8e7c51e7cbbfab3c2990cc3ed932
+ARG PIPED_BACKEND_VERSION=34839fdbed411da5db601086e94d436cda76cdd4
 
 ####################################################################################################
 ## Builder
