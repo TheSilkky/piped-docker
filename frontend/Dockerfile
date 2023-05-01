@@ -1,7 +1,7 @@
 ARG NODE_VERSION=lts
 ARG ALPINE_VERSION=3.17
 ARG CADDY_VERSION=2.6.4
-ARG PIPED_FRONTEND_VERSION=4b4b66d6074a594e396b6f8c22db4812080e6817
+ARG PIPED_FRONTEND_VERSION=1fbb37819c9b76b7d92b186e8de0d46030669327
 
 ####################################################################################################
 ## Builder
