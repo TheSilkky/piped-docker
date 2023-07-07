@@ -1,4 +1,5 @@
 #!/bin/sh
+set -ex
 
 export API_HOST="${API_HOST}"
 

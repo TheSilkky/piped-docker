@@ -7,6 +7,9 @@ ARG NGINX_VERSION=1.25.1
 ####################################################################################################
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS builder
 
+RUN apk add --no-cache \
+    curl
+
 ADD https://github.com/TeamPiped/Piped.git /piped
 
 WORKDIR /piped-frontend
@@ -15,7 +18,17 @@ RUN corepack enable && \
     corepack prepare pnpm@latest --activate
     
 RUN pnpm install --prefer-offline && \
-    pnpm build 
+    pnpm build
+
+RUN set -ex; \
+        base='https://fonts\.(gstatic\.com|kavin\.rocks)'; \
+        fonts=$(cat dist/assets/* | grep -Po "$base[^)]*" | sort | uniq); \
+        for font in $fonts; do \
+            file="dist/fonts$(echo "$font" | sed -E "s#$base##")";; \
+            mkdir -p "$(dirname "$file")";; \
+            curl -L "$font" -o "$file";; \
+        done; \
+        sed -Ei "s#$base#/fonts#g" dist/assets/*
 
 ####################################################################################################
 ## Final image
