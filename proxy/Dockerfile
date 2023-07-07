@@ -30,8 +30,7 @@ RUN apk add --no-cache \
 
 COPY --from=builder /piped-proxy/target/release/piped-proxy /usr/local/bin/piped-proxy
 
-RUN adduser --disabled-password --gecos "" --no-create-home piped && \
-    chmod +x /usr/local/bin/piped-proxy
+RUN adduser --disabled-password --gecos "" --no-create-home piped
 
 USER piped
 
