@@ -28,11 +28,6 @@ RUN pnpm install --prefer-offline && \
 ####################################################################################################
 FROM nginxinc/nginx-unprivileged:${NGINX_VERSION}-alpine${ALPINE_VERSION}
 
-RUN apk add --no-cache \
-    ca-certificates \
-    tzdata \
-    curl
-
 COPY --from=builder /piped-frontend/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY entrypoint.sh /
