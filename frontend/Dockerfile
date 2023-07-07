@@ -15,7 +15,7 @@ RUN apk add --no-cache \
 
 ADD https://github.com/TeamPiped/Piped.git /piped
 
-WORKDIR /piped-frontend
+WORKDIR /piped
 
 RUN corepack enable && \ 
     corepack prepare pnpm@latest --activate
@@ -28,7 +28,7 @@ RUN pnpm install --prefer-offline && \
 ####################################################################################################
 FROM nginxinc/nginx-unprivileged:${NGINX_VERSION}-alpine${ALPINE_VERSION}
 
-COPY --from=builder /piped-frontend/dist /usr/share/nginx/html
+COPY --from=builder /piped/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY entrypoint.sh /
 
