@@ -8,6 +8,9 @@ ARG ALPINE_VERSION=3.18
 ####################################################################################################
 FROM rust:${RUST_VERSION}-alpine${ALPINE_VERSION} AS builder
 
+RUN apk add --no-cache \
+    build-base
+
 ADD https://github.com/TeamPiped/piped-proxy.git /piped-proxy
 
 WORKDIR /piped-proxy
@@ -25,8 +28,8 @@ RUN apk add --no-cache \
 
 COPY --from=builder /piped-proxy/target/release/piped-proxy /usr/local/bin/piped-proxy
 
-RUN adduser --disabled-password --gecos "" --no-create-home piped \
-    && chmod +x /usr/local/bin/piped-proxy
+RUN adduser --disabled-password --gecos "" --no-create-home piped && \
+    chmod +x /usr/local/bin/piped-proxy
 
 USER piped
 

@@ -14,8 +14,8 @@ ADD --keep-git-dir=true https://github.com/TeamPiped/Piped-Backend.git /piped-ba
 
 WORKDIR /piped-backend
 
-RUN ./gradlew shadowJar \
-    && echo $(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short HEAD) > VERSION
+RUN ./gradlew shadowJar && \
+    echo $(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short HEAD) > VERSION
 
 ####################################################################################################
 ### Final image
@@ -27,9 +27,9 @@ WORKDIR /piped-backend
 COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar ./piped.jar
 COPY --from=builder /piped-backend/VERSION .
 
-RUN touch config.properties \
-    adduser --disabled-password --gecos "" --no-create-home piped \
-    && chown -R piped:piped /piped-backend
+RUN touch config.properties && \
+    adduser --disabled-password --gecos "" --no-create-home piped && \
+    chown -R piped:piped /piped-backend
 
 USER piped
 
