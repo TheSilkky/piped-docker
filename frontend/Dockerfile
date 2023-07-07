@@ -30,7 +30,7 @@ FROM nginxinc/nginx-unprivileged:${NGINX_VERSION}-alpine${ALPINE_VERSION}
 
 COPY --from=builder /piped/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --chmod=+x entrypoint.sh /
+COPY --chmod=0755 entrypoint.sh /
 
 ENTRYPOINT ["/entrypoint.sh"]
 
