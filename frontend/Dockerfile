@@ -1,42 +1,38 @@
 ARG NODE_VERSION=lts
-ARG ALPINE_VERSION=3.17
-ARG CADDY_VERSION=2.6.4
-ARG PIPED_FRONTEND_VERSION=1fbb37819c9b76b7d92b186e8de0d46030669327
+ARG ALPINE_VERSION=3.18
+ARG NGINX_VERSION=1.25.1
 
 ####################################################################################################
 ## Builder
 ####################################################################################################
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS builder
 
-ARG PIPED_FRONTEND_VERSION
-
-RUN apk add --no-cache \
-    ca-certificates \
-    git
+ADD https://github.com/TeamPiped/Piped.git /piped
 
 WORKDIR /piped-frontend
 
-RUN git init \
-    && git remote add origin https://git.silkky.dev/github/Piped.git \
-    && git fetch origin ${PIPED_FRONTEND_VERSION} \
-    && git reset --hard FETCH_HEAD
-
-RUN yarn install --prefer-offline \
-    && yarn build
+RUN corepack enable && \ 
+    corepack prepare pnpm@latest --activate
+    
+RUN pnpm install --prefer-offline && \
+    pnpm build 
 
 ####################################################################################################
 ## Final image
 ####################################################################################################
-FROM caddy:${CADDY_VERSION}-alpine
+FROM nginxinc/nginx-unprivileged:${NGINX_VERSION}-alpine${ALPINE_VERSION}
 
-COPY ./Caddyfile /etc/caddy/Caddyfile
-COPY ./startup.sh /startup.sh
-COPY --from=builder /piped-frontend/dist /srv
+COPY --from=builder /piped-frontend/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY entrypoint.sh /
 
-RUN chmod +x /startup.sh
-CMD ["/startup.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 
+CMD ["nginx", "-g", "daemon off;"]
+
+EXPOSE 8080
+
+LABEL org.opencontainers.image.source="https://github.com/TheSilkky/piped-docker.git"
 LABEL org.opencontainers.image.title="Piped Frontend"
 LABEL org.opencontainers.image.description="An alternative privacy-friendly YouTube frontend which is efficient by design."
 LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
-LABEL org.opencontainers.image.source="https://git.silkky.dev/ellie/piped-docker.git"

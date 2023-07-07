@@ -19,15 +19,15 @@ services:
     environment:
       - PORT=8080
       - HTTP_WORKERS=4
-      - API_URL=https://piped-api.silkky.dev
-      - PUBSUB_URL=https://piped-pubsub.silkky.dev
-      - PROXY_PART=https://piped-proxy.silkky.dev
-      - FRONTEND_URL=https://piped.silkky.dev
-      - hibernate.connection.url=jdbc:postgresql://postgresql:5432/piped
+      - API_URL=https://${API_HOST}
+      - PUBSUB_URL=https://${PUBSUB_HOST}
+      - PROXY_PART=https://${PROXY_HOST}
+      - FRONTEND_URL=https://${FRONTEND_HOST}
+      - hibernate.connection.url=jdbc:postgresql://postgres:5432/piped
       - hibernate.connection.driver_class=org.postgresql.Driver
       - hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
       - hibernate.connection.username=piped
-      - hibernate.connection.password=${POSTGRESQL_PASSWORD}
+      - hibernate.connection.password=${DATABASE_PASSWORD}
       - COMPROMISED_PASSWORD_CHECK=true
       - DISABLE_LBRY=true
 
@@ -44,6 +44,8 @@ services:
     hostname: piped-frontend
     networks:
       - public
+    environment:
+      - API_HOST=${API_HOST}
 
   postgres:
     image: postgres:15.3-alpine3.18
@@ -54,9 +56,7 @@ services:
     volumes:
       - database:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
-    secrets:
-      - database-password
     environment:
       - POSTGRES_DB=piped
       - POSTGRES_USER=piped
-      - POSTGRES_PASSWORD_FILE=/run/secrets/database-password
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
