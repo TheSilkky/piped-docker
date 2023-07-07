@@ -1,114 +1,62 @@
-version: "3.8"
-
 networks:
-  web:
+  public:
     external: true
   backend:
-    driver: overlay
 
 volumes:
   database:
-    driver: local
-
+  
 services:
-  postgresql:
-    image: postgres:14.7-alpine
-    hostname: postgresql
-    networks:
-      - backend
-    volumes:
-      - database:/var/lib/postgresql/data
-      - /etc/localtime:/etc/localtime:ro
-    environment:
-      - POSTGRES_DB=piped
-      - POSTGRES_USER=piped
-      - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}
-    deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: any
   backend:
-    image: git.silkky.dev/ellie/piped-backend:latest
+    image: ghcr.io/thesilkky/piped-backend:latest
+    depends_on:
+      - postgres
+    restart: always
     hostname: piped-backend
     networks:
-      - web
+      - public
       - backend
     environment:
       - PORT=8080
       - HTTP_WORKERS=4
-      - PROXY_PART=https://${PIPED_PROXY_HOST}
-      - API_URL=https://${PIPED_BACKEND_HOST}
-      - FRONTEND_URL=https://${PIPED_FRONTEND_HOST}
-      - PUBSUB_URL=https://${PIPED_PUBSUB_HOST}
-      - COMPROMISED_PASSWORD_CHECK=true
-      - DISABLE_REGISTRATION=${DISABLE_REGISTRATION}
-      - SENTRY_DSN=${SENTRY_DSN}
-      - S3_ENDPOINT=${S3_ENDPOINT}
-      - S3_ACCESS_KEY=${S3_ACCESS_KEY}
-      - S3_SECRET_KEY=${S3_SECRET_KEY}
-      - S3_BUCKET=${S3_BUCKET}
+      - API_URL=https://piped-api.silkky.dev
+      - PUBSUB_URL=https://piped-pubsub.silkky.dev
+      - PROXY_PART=https://piped-proxy.silkky.dev
+      - FRONTEND_URL=https://piped.silkky.dev
       - hibernate.connection.url=jdbc:postgresql://postgresql:5432/piped
       - hibernate.connection.driver_class=org.postgresql.Driver
       - hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
       - hibernate.connection.username=piped
       - hibernate.connection.password=${POSTGRESQL_PASSWORD}
-    deploy:
-      mode: replicated
-      replicas: 4
-      restart_policy:
-        condition: any
-      update_config:
-        parallelism: 2
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.piped-backend.rule=Host(`${PIPED_BACKEND_HOST}`)
-        - traefik.http.routers.piped-backend.entryPoints=websecure
-        - traefik.http.routers.piped-backend.tls.certResolver=le
-        - traefik.http.routers.piped-backend.service=backend-piped
-        - traefik.http.routers.piped-pubsub.rule=Host(`${PIPED_PUBSUB_HOST}`) && Path(`/webhooks/pubsub`)
-        - traefik.http.routers.piped-pubsub.entryPoints=websecure
-        - traefik.http.routers.piped-pubsub.tls.certResolver=le
-        - traefik.http.routers.piped-pubsub.service=backend-piped
-        - traefik.http.services.backend-piped.loadBalancer.server.port=8080
-        - traefik.http.services.backend-piped.loadBalancer.sticky.cookie.secure=true
-        - traefik.http.services.backend-piped.loadBalancer.sticky.cookie.httpOnly=true
-        - traefik.http.services.backend-piped.loadBalancer.sticky.cookie.sameSite=strict
+      - COMPROMISED_PASSWORD_CHECK=true
+      - DISABLE_LBRY=true
+
   proxy:
-    image: git.silkky.dev/ellie/piped-proxy:latest
+    image: ghcr.io/thesilkky/piped-proxy:latest
+    restart: always
     hostname: piped-proxy
     networks:
-      - web
-    deploy:
-      mode: replicated
-      replicas: 4
-      restart_policy:
-        condition: any
-      update_config:
-        parallelism: 2
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.piped-proxy.rule=Host(`${PIPED_PROXY_HOST}`)
-        - traefik.http.routers.piped-proxy.entryPoints=websecure
-        - traefik.http.routers.piped-proxy.tls.certResolver=le
-        - traefik.http.routers.piped-proxy.service=proxy-piped
-        - traefik.http.services.proxy-piped.loadBalancer.server.port=8080
+      - public
+
   frontend:
-    image: git.silkky.dev/ellie/piped-frontend:latest
+    image: ghcr.io/thesilkky/piped-frontend:latest
+    restart: always
     hostname: piped-frontend
     networks:
-      - web
+      - public
+
+  postgres:
+    image: postgres:15.3-alpine3.18
+    restart: always
+    hostname: postgres
+    networks:
+      - backend
+    volumes:
+      - database:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    secrets:
+      - database-password
     environment:
-      - API_HOST=${PIPED_BACKEND_HOST}
-    deploy:
-      mode: replicated
-      replicas: 2
-      restart_policy:
-        condition: any
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.piped-frontend.rule=Host(`${PIPED_FRONTEND_HOST}`)
-        - traefik.http.routers.piped-frontend.entryPoints=websecure
-        - traefik.http.routers.piped-frontend.tls.certResolver=le
-        - traefik.http.routers.piped-frontend.service=frontend-piped
-        - traefik.http.services.frontend-piped.loadBalancer.server.port=3000
+      - POSTGRES_DB=piped
+      - POSTGRES_USER=piped
+      - POSTGRES_PASSWORD_FILE=/run/secrets/database-password

@@ -1,3 +1,3 @@
 # piped-docker
 
-Piped Docker containers and compose deployment
+Piped Docker containers and Compose deployment
