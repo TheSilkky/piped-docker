@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1-labs
+
 ARG NODE_VERSION=lts
 ARG ALPINE_VERSION=3.17
 ARG NGINX_VERSION=1.25.1
@@ -8,7 +10,8 @@ ARG NGINX_VERSION=1.25.1
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS builder
 
 RUN apk add --no-cache \
-    curl
+    ca-certificates \
+    tzdata
 
 ADD https://github.com/TeamPiped/Piped.git /piped
 
@@ -20,20 +23,15 @@ RUN corepack enable && \
 RUN pnpm install --prefer-offline && \
     pnpm build
 
-RUN set -ex; \
-        base='https://fonts\.(gstatic\.com|kavin\.rocks)'; \
-        fonts=$(cat dist/assets/* | grep -Po "$base[^)]*" | sort | uniq); \
-        for font in $fonts; do \
-            file="dist/fonts$(echo "$font" | sed -E "s#$base##")";; \
-            mkdir -p "$(dirname "$file")";; \
-            curl -L "$font" -o "$file";; \
-        done; \
-        sed -Ei "s#$base#/fonts#g" dist/assets/*
-
 ####################################################################################################
 ## Final image
 ####################################################################################################
 FROM nginxinc/nginx-unprivileged:${NGINX_VERSION}-alpine${ALPINE_VERSION}
+
+RUN apk add --no-cache \
+    ca-certificates \
+    tzdata \
+    curl
 
 COPY --from=builder /piped-frontend/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf

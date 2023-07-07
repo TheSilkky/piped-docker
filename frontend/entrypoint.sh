@@ -1,8 +1,17 @@
 #!/bin/sh
 set -ex
 
-export API_HOST="${API_HOST}"
+# Set custom API
+api="${API_HOST}"
+sed -i "s/pipedapi.kavin.rocks/$api/g" /usr/share/nginx/html/assets/*
 
-sed -i "s/pipedapi.kavin.rocks/$API_HOST/g" /usr/share/nginx/html/assets/*
+# Localize fonts
+base="https://fonts\.(gstatic\.com|kavin\.rocks)"
+for font in $fonts; do
+    file="/usr/share/nginx/html/fonts$(echo "$font" | sed -E "s#$base##")"
+    mkdir -p "$(dirname "$file")"
+    curl -L "$font" -o "$file"
+done
+sed -Ei "s#$base#/fonts#g" /usr/share/nginx/html/assets/*
 
 exec "$@"

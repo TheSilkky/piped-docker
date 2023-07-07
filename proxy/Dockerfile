@@ -9,6 +9,8 @@ ARG ALPINE_VERSION=3.18
 FROM rust:${RUST_VERSION}-alpine${ALPINE_VERSION} AS builder
 
 RUN apk add --no-cache \
+    ca-certificates \
+    tzdata \
     build-base
 
 ADD https://github.com/TeamPiped/piped-proxy.git /piped-proxy
