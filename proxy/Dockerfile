@@ -28,7 +28,7 @@ RUN apk add --no-cache \
     ca-certificates \
     tzdata
 
-COPY --from=builder /piped-proxy/target/release/piped-proxy /usr/local/bin/piped-proxy
+COPY --from=builder --chmod=0755 /piped-proxy/target/release/piped-proxy /usr/local/bin/piped-proxy
 
 RUN adduser --disabled-password --gecos "" --no-create-home piped
 
