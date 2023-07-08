@@ -14,7 +14,7 @@ RUN rustup set profile minimal
 WORKDIR /piped-proxy
 
 RUN mkdir src && \ 
-    echo 'fn main() {}' > src/main.rs
+    echo "fn main() {}" > src/main.rs
 
 COPY piped-proxy/Cargo.* ./
 RUN cargo build --release && \
