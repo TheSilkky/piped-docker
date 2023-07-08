@@ -7,6 +7,10 @@ ARG NGINX_VERSION=1.25.1
 ####################################################################################################
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS builder
 
+RUN apk add --no-cache \
+    grep \
+    curl
+
 RUN corepack enable && \ 
     corepack prepare pnpm@latest --activate
 
