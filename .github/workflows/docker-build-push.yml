@@ -66,9 +66,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          key: backend-${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-buildx-
+            backend-${{ runner.os }}-buildx-
 
       - name: Build and push
         uses: docker/build-push-action@v4
@@ -142,9 +142,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          key: proxy-${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-buildx-
+            proxy-${{ runner.os }}-buildx-
 
       - name: Build and push
         uses: docker/build-push-action@v4
@@ -218,9 +218,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          key: frontend-${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-buildx-
+            frontend-${{ runner.os }}-buildx-
 
       - name: Build and push
         uses: docker/build-push-action@v4
