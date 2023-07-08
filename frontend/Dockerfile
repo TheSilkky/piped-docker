@@ -11,17 +11,17 @@ RUN apk add --no-cache \
     grep \
     curl
 
-RUN corepack enable && \ 
-    corepack prepare pnpm@latest --activate
+RUN corepack enable pnpm
 
 WORKDIR /piped
 
-COPY Piped/package.json Piped/pnpm-lock.yaml ./
+COPY Piped/pnpm-lock.yaml ./
+RUN pnpm fetch
 
-RUN pnpm install --prefer-offline 
+COPY Piped/package.json ./
+RUN pnpm install --offline
 
 COPY Piped ./
-
 RUN pnpm build && \
     ./localizefonts.sh
 

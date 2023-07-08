@@ -17,12 +17,10 @@ RUN mkdir src && \
     echo 'fn main() {}' > src/main.rs
 
 COPY piped-proxy/Cargo.* ./
-
 RUN cargo build --release && \
     rm -rf src
 
 COPY piped-proxy ./
-
 RUN touch src/main.rs && \
     cargo build --release
 
