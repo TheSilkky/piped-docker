@@ -11,18 +11,20 @@ RUN apk add --no-cache \
 
 RUN rustup set profile minimal
 
-RUN cargo new --bin /piped-proxy
-
 WORKDIR /piped-proxy
+
+RUN mkdir src && \ 
+    echo 'fn main() {}' > src/main.rs
 
 COPY piped-proxy/Cargo.* ./
 
-RUN cargo build --release \
-    && find . -not -path "./target*" -delete
+RUN cargo build --release && \
+    rm -rf src
 
 COPY piped-proxy ./
 
-RUN cargo build --release
+RUN touch src/main.rs && \
+    cargo build --release
 
 ####################################################################################################
 ### Final image
