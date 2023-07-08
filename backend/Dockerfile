@@ -38,7 +38,7 @@ HEALTHCHECK \
     --start-period=15s \
     --interval=1m \
     --timeout=5s \
-    CMD wget --quiet http://localhost:8080/healthcheck || exit 1
+    CMD wget --quiet --spider http://localhost:8080/healthcheck || exit 1
 
 LABEL org.opencontainers.image.source="https://github.com/TheSilkky/piped-docker.git"
 LABEL org.opencontainers.image.title="Piped Backend"
