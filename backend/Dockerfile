@@ -40,7 +40,7 @@ HEALTHCHECK \
     --timeout=5s \
     CMD wget --quiet http://localhost:8080/healthcheck || exit 1
 
-LABEL org.opencontainers.image.source="https://git.silkky.dev/ellie/piped-docker.git"
+LABEL org.opencontainers.image.source="https://github.com/TheSilkky/piped-docker.git"
 LABEL org.opencontainers.image.title="Piped Backend"
 LABEL org.opencontainers.image.description="An alternative privacy-friendly YouTube frontend which is efficient by design."
 LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
