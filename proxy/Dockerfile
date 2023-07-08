@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1-labs
-
 ARG RUST_VERSION=1.70.0
 ARG ALPINE_VERSION=3.18
 
@@ -9,13 +7,20 @@ ARG ALPINE_VERSION=3.18
 FROM rust:${RUST_VERSION}-alpine${ALPINE_VERSION} AS builder
 
 RUN apk add --no-cache \
-    ca-certificates \
-    tzdata \
     build-base
 
-ADD https://github.com/TeamPiped/piped-proxy.git /piped-proxy
+RUN rustup set profile minimal
+
+RUN cargo new --bin /piped-proxy
 
 WORKDIR /piped-proxy
+
+COPY piped-proxy/Cargo.* ./
+
+RUN cargo build --release \
+    && find . -not -path "./target*" -delete
+
+COPY piped-proxy ./
 
 RUN cargo build --release
 
@@ -23,10 +28,6 @@ RUN cargo build --release
 ### Final image
 ####################################################################################################
 FROM alpine:${ALPINE_VERSION}
-
-RUN apk add --no-cache \ 
-    ca-certificates \
-    tzdata
 
 COPY --from=builder --chmod=0755 /piped-proxy/target/release/piped-proxy /usr/local/bin/piped-proxy
 
