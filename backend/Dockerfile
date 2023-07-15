@@ -6,7 +6,8 @@ ARG JAVA_VERSION=17
 ####################################################################################################
 FROM eclipse-temurin:${JAVA_VERSION}-jdk AS builder
 
-RUN apk add --no-cache \
+RUN apt update && apt install -y \
+    --no-install-recommends \
     git
 
 ADD --keep-git-dir=true https://github.com/TeamPiped/Piped-Backend.git /piped-backend
