@@ -1,3 +1,4 @@
+#syntax=docker/dockerfile:1-labs
 ARG JAVA_VERSION=17
 
 ####################################################################################################
@@ -5,12 +6,15 @@ ARG JAVA_VERSION=17
 ####################################################################################################
 FROM eclipse-temurin:${JAVA_VERSION}-jdk AS builder
 
+RUN apk add --no-cache \
+    git
+
+ADD --keep-git-dir=true https://github.com/TeamPiped/Piped-Backend.git /piped-backend
+
 WORKDIR /piped-backend
 
-COPY Piped-Backend ./
-
-RUN ./gradlew shadowJar && \
-    echo $(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short HEAD) > VERSION
+RUN echo "$(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short HEAD)" > VERSION && \
+    ./gradlew shadowJar
 
 ####################################################################################################
 ### Final image

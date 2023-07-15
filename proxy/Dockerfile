@@ -1,4 +1,5 @@
-ARG RUST_VERSION=1.70.0
+#syntax=docker/dockerfile:1-labs
+ARG RUST_VERSION=1.71.0
 ARG ALPINE_VERSION=3.18
 
 ####################################################################################################
@@ -6,10 +7,11 @@ ARG ALPINE_VERSION=3.18
 ####################################################################################################
 FROM rust:${RUST_VERSION}-alpine${ALPINE_VERSION} AS builder
 
-RUN apk add --no-cache \
+RUN rustup set profile minimal && \ 
+    apk add --no-cache \
     build-base
 
-RUN rustup set profile minimal
+ADD --keep-git-dir=true https://github.com/TeamPiped/piped-proxy.git /piped-proxy
 
 WORKDIR /piped-proxy
 

@@ -1,27 +1,34 @@
+#syntax=docker/dockerfile:1-labs
 ARG NODE_VERSION=lts
 ARG ALPINE_VERSION=3.17
 ARG NGINX_VERSION=1.25.1
+
+####################################################################################################
+## Get source code
+####################################################################################################
+FROM scratch AS source
+
+ADD --keep-git-dir=true https://github.com/TeamPiped/Piped.git /piped
 
 ####################################################################################################
 ## Builder
 ####################################################################################################
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS builder
 
-RUN apk add --no-cache \
+RUN corepack enable pnpm && \
+    apk add --no-cache \
     grep \
     curl
 
-RUN corepack enable pnpm
-
 WORKDIR /piped
 
-COPY Piped/pnpm-lock.yaml ./
+COPY --from=source /piped/pnpm-lock.yaml ./
 RUN pnpm fetch
 
-COPY Piped/package.json ./
+COPY --from=source /piped/package.json ./
 RUN pnpm install --offline
 
-COPY Piped ./
+COPY --from=source /piped ./
 RUN pnpm build && \
     ./localizefonts.sh
 
