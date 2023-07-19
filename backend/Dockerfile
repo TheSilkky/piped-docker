@@ -4,7 +4,7 @@ ARG JAVA_VERSION=17
 ####################################################################################################
 ## Builder
 ####################################################################################################
-FROM eclipse-temurin:${JAVA_VERSION}-jdk AS builder
+FROM --platform=${BUILDPLATFORM} eclipse-temurin:${JAVA_VERSION}-jdk AS builder
 
 RUN apt update && apt install -y \
     --no-install-recommends \

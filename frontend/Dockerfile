@@ -13,7 +13,7 @@ ADD --keep-git-dir=true https://github.com/TeamPiped/Piped.git /piped
 ####################################################################################################
 ## Builder
 ####################################################################################################
-FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS builder
+FROM --platform=${BUILDPLATFORM} node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS builder
 
 RUN corepack enable pnpm && \
     apk add --no-cache \
