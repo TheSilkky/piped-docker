@@ -34,7 +34,7 @@ services:
         - "traefik.http.routers.piped-backend.rule=Host(`${API_HOST}`)"
         - "traefik.http.routers.piped-backend.entryPoints=websecure"
         - "traefik.http.routers.piped-backend.tls.certResolver=le"
-        - "traefik.http.routers.piped-backend.middlewares=tailscaleIpList@file"
+        - "traefik.http.routers.piped-backend.middlewares=trustedIpList@file"
         - "traefik.http.routers.piped-backend.service=piped-backend"
         - "traefik.http.routers.piped-pubsub.rule=Host(`${PUBSUB_HOST}`) && Path(`/webhooks/pubsub`)"
         - "traefik.http.routers.piped-pubsub.entryPoints=websecure"
@@ -53,7 +53,7 @@ services:
         - "traefik.http.routers.piped-proxy.rule=Host(`${PROXY_HOST}`)"
         - "traefik.http.routers.piped-proxy.entryPoints=websecure"
         - "traefik.http.routers.piped-proxy.tls.certResolver=le"
-        - "traefik.http.routers.piped-proxy.middlewares=tailscaleIpList@file"
+        - "traefik.http.routers.piped-proxy.middlewares=trustedIpList@file"
         - "traefik.http.routers.piped-proxy.service=piped-proxy"
         - "traefik.http.services.piped-proxy.loadbalancer.server.port=8080"
 
@@ -70,7 +70,7 @@ services:
         - "traefik.http.routers.piped-frontend.rule=Host(`${FRONTEND_HOST}`)"
         - "traefik.http.routers.piped-frontend.entryPoints=websecure"
         - "traefik.http.routers.piped-frontend.tls.certResolver=le"
-        - "traefik.http.routers.piped-frontend.middlewares=tailscaleIpList@file"
+        - "traefik.http.routers.piped-frontend.middlewares=trustedIpList@file"
         - "traefik.http.routers.piped-frontend.service=piped-frontend"
         - "traefik.http.services.piped-frontend.loadbalancer.server.port=8080"
 
