@@ -25,7 +25,7 @@ FROM eclipse-temurin:${JAVA_VERSION}-jre
 COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar /opt/piped-backend/piped.jar
 COPY --from=builder /piped-backend/VERSION /opt/piped-backend
 
-RUN adduser -S -H -D -s /sbin/nologin piped && \
+RUN adduser --system --no-create-home --disabled-password --shell /sbin/nologin piped && \
     chown -R piped:piped /opt/piped-backend
 
 USER piped
