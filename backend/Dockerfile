@@ -22,6 +22,8 @@ RUN echo "$(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short
 ####################################################################################################
 FROM eclipse-temurin:${JAVA_VERSION}-jre
 
+WORKDIR /opt/piped-backend
+
 COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar /opt/piped-backend/piped.jar
 COPY --from=builder /piped-backend/VERSION /opt/piped-backend
 
