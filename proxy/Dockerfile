@@ -72,7 +72,7 @@ FROM alpine:${ALPINE_VERSION}
 
 COPY --from=build --chmod=0755 /piped-proxy/piped-proxy /usr/local/bin/piped-proxy
 
-RUN adduser --disabled-password --gecos "" --no-create-home piped
+RUN adduser -S -H -D -s /sbin/nologin piped
 
 USER piped
 
@@ -82,7 +82,7 @@ EXPOSE 8080
 
 STOPSIGNAL SIGTERM
 
-LABEL org.opencontainers.image.source="https://github.com/TheSilkky/piped-docker.git"
+LABEL org.opencontainers.image.source="https://github.com/TeamPiped/piped-proxy.git"
 LABEL org.opencontainers.image.title="Piped Proxy"
 LABEL org.opencontainers.image.description="A proxy for Piped written in Rust"
 LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"

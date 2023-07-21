@@ -47,7 +47,7 @@ CMD ["nginx", "-g", "daemon off;"]
 
 EXPOSE 8080
 
-LABEL org.opencontainers.image.source="https://github.com/TheSilkky/piped-docker.git"
+LABEL org.opencontainers.image.source="https://github.com/TeamPiped/Piped.git"
 LABEL org.opencontainers.image.title="Piped Frontend"
 LABEL org.opencontainers.image.description="An alternative privacy-friendly YouTube frontend which is efficient by design."
 LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
