@@ -75,8 +75,8 @@ ARG GID=911
 
 COPY --from=build --chmod=0755 /piped-proxy/piped-proxy /usr/local/bin/piped-proxy
 
-RUN addgroup -S -g ${GID} piped && \
-    adduser -S -H -D -G traefik -u ${UID} -s /sbin/nologin piped
+RUN addgroup --system --gid ${GID} piped && \ 
+    adduser --system --no-create-home --disabled-password --group piped --uid ${UID} --gecos "" --shell /sbin/nologin piped
 
 USER piped
 

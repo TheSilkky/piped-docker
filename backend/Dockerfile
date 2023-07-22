@@ -31,8 +31,8 @@ WORKDIR /opt/piped-backend
 COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar /opt/piped-backend/piped.jar
 COPY --from=builder /piped-backend/VERSION /opt/piped-backend
 
-RUN groupadd --system --gid ${GID} piped && \ 
-    useradd --system --no-create-home --gid piped --uid ${UID} --shell /sbin/nologin piped && \
+RUN addgroup --system --gid ${GID} piped && \ 
+    adduser --system --no-create-home --disabled-password --group piped --uid ${UID} --gecos "" --shell /sbin/nologin piped && \
     chown -R piped:piped /opt/piped-backend
 
 USER piped
