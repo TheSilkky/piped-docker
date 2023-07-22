@@ -1,4 +1,5 @@
 #syntax=docker/dockerfile:1-labs
+
 ARG NODE_VERSION=lts
 ARG ALPINE_VERSION=3.17
 ARG NGINX_VERSION=1.25.1
