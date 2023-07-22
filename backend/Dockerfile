@@ -32,7 +32,7 @@ COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar /opt/piped-backe
 COPY --from=builder /piped-backend/VERSION /opt/piped-backend
 
 RUN groupadd --system --gid ${GID} piped && \ 
-    useradd --system --no-create-home --group piped --uid ${UID} --shell /sbin/nologin piped && \
+    useradd --system --no-create-home --gid piped --uid ${UID} --shell /sbin/nologin piped && \
     chown -R piped:piped /opt/piped-backend
 
 USER piped
