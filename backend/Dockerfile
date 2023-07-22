@@ -32,7 +32,7 @@ COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar /opt/piped-backe
 COPY --from=builder /piped-backend/VERSION /opt/piped-backend
 
 RUN addgroup --system --gid ${GID} piped && \ 
-    adduser --system --no-create-home --disabled-password --group piped --uid ${UID} --gecos "" --shell /sbin/nologin piped && \
+    adduser --system --no-create-home --disabled-password --gid ${GID} --uid ${UID} --gecos "" --shell /sbin/nologin piped && \
     chown -R piped:piped /opt/piped-backend
 
 USER piped
