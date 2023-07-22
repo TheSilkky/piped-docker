@@ -22,12 +22,16 @@ RUN echo "$(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short
 ####################################################################################################
 FROM eclipse-temurin:${JAVA_VERSION}-jre
 
+ARG UID=911
+ARG GID=911
+
 WORKDIR /opt/piped-backend
 
 COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar /opt/piped-backend/piped.jar
 COPY --from=builder /piped-backend/VERSION /opt/piped-backend
 
-RUN useradd --system --no-create-home --shell /sbin/nologin piped && \
+RUN groupadd --system --gid ${GID} piped && \ 
+    useradd --system --no-create-home --group piped --uid ${UID} --shell /sbin/nologin piped && \
     chown -R piped:piped /opt/piped-backend
 
 USER piped

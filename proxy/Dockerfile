@@ -70,9 +70,13 @@ FROM build-${TARGETARCH} AS build
 ####################################################################################################
 FROM alpine:${ALPINE_VERSION}
 
+ARG UID=911
+ARG GID=911
+
 COPY --from=build --chmod=0755 /piped-proxy/piped-proxy /usr/local/bin/piped-proxy
 
-RUN adduser -S -H -D -s /sbin/nologin piped
+RUN addgroup -S -g ${GID} piped && \
+    adduser -S -H -D -G traefik -u ${UID} -s /sbin/nologin piped
 
 USER piped
 
