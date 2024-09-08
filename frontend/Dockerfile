@@ -34,7 +34,7 @@ RUN pnpm build && \
 ####################################################################################################
 ## Final image
 ####################################################################################################
-FROM --platform=${TARGETPLATFORM} nginxinc/nginx-unprivileged:${NGINX_VERSION}-alpine${ALPINE_VERSION}
+FROM nginxinc/nginx-unprivileged:${NGINX_VERSION}-alpine${ALPINE_VERSION}
 
 COPY --from=builder --chown=nginx:nginx /piped/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf

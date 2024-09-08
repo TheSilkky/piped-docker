@@ -68,7 +68,7 @@ FROM build-${TARGETARCH} AS build
 ####################################################################################################
 ### Final image
 ####################################################################################################
-FROM --platform=${TARGETPLATFORM} alpine:${ALPINE_VERSION}
+FROM alpine:${ALPINE_VERSION}
 
 ARG UID
 ARG GID
