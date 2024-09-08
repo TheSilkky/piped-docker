@@ -1,6 +1,6 @@
-#syntax=docker/dockerfile:1-labs
-
-ARG JAVA_VERSION=17
+ARG JAVA_VERSION=21
+ARG UID=911
+ARG GID=911
 
 ####################################################################################################
 ## Builder
@@ -21,29 +21,26 @@ RUN echo "$(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short
 ####################################################################################################
 ### Final image
 ####################################################################################################
-FROM eclipse-temurin:${JAVA_VERSION}-jre
+FROM --platform=${TARGETPLATFORM} eclipse-temurin:${JAVA_VERSION}-jre
 
-ARG UID=911
-ARG GID=911
+ARG UID
+ARG GID
 
 WORKDIR /opt/piped-backend
 
 COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar /opt/piped-backend/piped.jar
 COPY --from=builder /piped-backend/VERSION /opt/piped-backend
+COPY --chmod=0755 entrypoint.sh /opt/piped-backend
 
-RUN addgroup --system --gid ${GID} piped && \ 
+RUN addgroup --system --gid ${GID} piped && \
     adduser --system --no-create-home --disabled-password --gid ${GID} --uid ${UID} --gecos "" --shell /sbin/nologin piped && \
     chown -R piped:piped /opt/piped-backend
 
 USER piped
-
-CMD ["java", "-server", "-Xmx1G", "-XX:+UnlockExperimentalVMOptions", "-XX:+OptimizeStringConcat", "-XX:+UseStringDeduplication", "-XX:+UseCompressedOops", "-XX:+UseNUMA", "-XX:+UseG1GC", "-Xshare:on", "-jar", "/opt/piped-backend/piped.jar"]
-
+ENTRYPOINT ["/opt/piped-backend/entrypoint.sh"]
 EXPOSE 8080
-
 STOPSIGNAL SIGTERM
 
-LABEL org.opencontainers.image.source="https://github.com/TeamPiped/Piped-Backend.git"
 LABEL org.opencontainers.image.title="Piped Backend"
 LABEL org.opencontainers.image.description="An alternative privacy-friendly YouTube frontend which is efficient by design."
-LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
+LABEL org.opencontainers.image.source="https://github.com/TheSilkky/piped-docker.git"

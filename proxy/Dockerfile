@@ -1,7 +1,7 @@
-#syntax=docker/dockerfile:1-labs
-
-ARG RUST_VERSION=1.71.0
-ARG ALPINE_VERSION=3.18
+ARG RUST_VERSION=1.81.0
+ARG ALPINE_VERSION=3.20
+ARG UID=911
+ARG GID=911
 
 ####################################################################################################
 ## Get source code
@@ -24,7 +24,7 @@ RUN mkdir -pv "${CARGO_HOME}" && \
 
 WORKDIR /piped-proxy
 
-RUN mkdir src && \ 
+RUN mkdir src && \
     echo "fn main() {}" > src/main.rs
 COPY --from=source /piped-proxy/Cargo.* ./
 RUN cargo build --target=x86_64-unknown-linux-musl --release && \
@@ -49,7 +49,7 @@ RUN mkdir -pv "${CARGO_HOME}" && \
 
 WORKDIR /piped-proxy
 
-RUN mkdir src && \ 
+RUN mkdir src && \
     echo "fn main() {}" > src/main.rs
 COPY --from=source /piped-proxy/Cargo.* ./
 RUN cargo build --target=aarch64-unknown-linux-musl --release && \
@@ -68,25 +68,21 @@ FROM build-${TARGETARCH} AS build
 ####################################################################################################
 ### Final image
 ####################################################################################################
-FROM alpine:${ALPINE_VERSION}
+FROM --platform=${TARGETPLATFORM} alpine:${ALPINE_VERSION}
 
-ARG UID=911
-ARG GID=911
+ARG UID
+ARG GID
 
-COPY --from=build --chmod=0755 /piped-proxy/piped-proxy /usr/local/bin/piped-proxy
+COPY --from=build --chmod=0755 /piped-proxy/piped-proxy /usr/local/bin
 
 RUN addgroup -S -g ${GID} piped && \
     adduser -S -H -D -G piped -u ${UID} -g "" -s /sbin/nologin piped
 
 USER piped
-
 CMD ["piped-proxy"]
-
 EXPOSE 8080
-
 STOPSIGNAL SIGTERM
 
-LABEL org.opencontainers.image.source="https://github.com/TeamPiped/piped-proxy.git"
 LABEL org.opencontainers.image.title="Piped Proxy"
 LABEL org.opencontainers.image.description="A proxy for Piped written in Rust"
-LABEL org.opencontainers.image.licenses="AGPL-3.0-or-later"
+LABEL org.opencontainers.image.source="https://github.com/TheSilkky/piped-docker.git"
