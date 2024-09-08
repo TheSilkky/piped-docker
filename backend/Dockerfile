@@ -21,7 +21,7 @@ RUN echo "$(git log -1 --date=short --pretty=format:%cd)-$(git rev-parse --short
 ####################################################################################################
 ### Final image
 ####################################################################################################
-FROM --platform=${TARGETPLATFORM} eclipse-temurin:${JAVA_VERSION}-jre
+FROM eclipse-temurin:${JAVA_VERSION}-jre
 
 ARG UID
 ARG GID
@@ -32,8 +32,8 @@ COPY --from=builder /piped-backend/build/libs/piped-1.0-all.jar /opt/piped-backe
 COPY --from=builder /piped-backend/VERSION /opt/piped-backend
 COPY --chmod=0755 entrypoint.sh /opt/piped-backend
 
-RUN addgroup --system --gid ${GID} piped && \
-    adduser --system --no-create-home --disabled-password --gid ${GID} --uid ${UID} --gecos "" --shell /sbin/nologin piped && \
+RUN groupadd --system --gid ${GID} piped && \
+    adduser --system --gid ${GID} --uid ${UID} --shell /sbin/nologin piped && \
     chown -R piped:piped /opt/piped-backend
 
 USER piped
