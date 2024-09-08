@@ -33,7 +33,7 @@ COPY --from=builder /piped-backend/VERSION /opt/piped-backend
 COPY --chmod=0755 entrypoint.sh /opt/piped-backend
 
 RUN groupadd --system --gid ${GID} piped && \
-    adduser --system --gid ${GID} --uid ${UID} --shell /sbin/nologin piped && \
+    useradd --system --gid ${GID} --uid ${UID} --shell /sbin/nologin piped && \
     chown -R piped:piped /opt/piped-backend
 
 USER piped
